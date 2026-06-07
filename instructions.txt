@@ -1,5 +1,22 @@
 # INSTRUCTIONS — PROJET CIE FACTURES
 # À suivre depuis le début pour reproduire ce projet
+# Inclut toutes les erreurs rencontrées et leurs solutions
+
+# ============================================================
+# PROCESSUS STANDARD — DU DÉBUT À LA FIN
+# ============================================================
+
+## ÉTAPE 0 — CRÉER LE .gitignore EN PREMIER (avant tout)
+# Créer un fichier .gitignore à la racine avec ce contenu :
+# (sans guillemets, sans espaces autour)
+
+venv/
+env/
+data/
+__pycache__/
+*.zip
+*.pyc
+.ipynb_checkpoints/
 
 ## ÉTAPE 1 — Cloner le projet depuis GitHub
 git clone git@github-kaynordata:Kaynor-Data/projet-cie-factures.git
@@ -9,8 +26,11 @@ cd projet-cie-factures
 python -m venv venv
 
 ## ÉTAPE 3 — Activer l'environnement
-# Windows :
+# Windows CMD :
 venv\Scripts\activate
+# Windows PowerShell :
+(Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned)
+& "venv\Scripts\Activate.ps1"
 
 ## ÉTAPE 4 — Installer les bibliothèques
 pip install pandas matplotlib seaborn jupyter
@@ -18,14 +38,262 @@ pip install pandas matplotlib seaborn jupyter
 ## ÉTAPE 5 — Générer requirements.txt
 pip freeze > requirements.txt
 
-## ÉTAPE 6 — Placer le dataset
+## ÉTAPE 6 — Créer les dossiers nécessaires
+mkdir data
+mkdir outputs
+
+## ÉTAPE 7 — Placer le dataset
 # Copier household_power_consumption.txt dans le dossier data/
+# NE PAS tracker ce fichier avec Git (trop lourd - 124 MB)
 
-## ÉTAPE 7 — Lancer Jupyter
+## ÉTAPE 8 — Lancer Jupyter
 jupyter notebook
-# Ouvrir le notebook : analyse_factures_cie.ipynb
+# Créer un nouveau notebook et le renommer : analyse_factures_cie
 
-## ÉTAPE 8 — Pousser sur GitHub (voir instructions_git pour les erreurs)
+## ÉTAPE 9 — Vérifier le remote SSH avant de pousser
+git remote -v
+# Doit afficher : git@github-kaynordata:Kaynor-Data/... (PAS git@github.com)
+# Si mauvais remote → voir ERREUR 2 ci-dessous
+
+## ÉTAPE 10 — Pousser sur GitHub
 git add .
-git commit -m "feat: description"
+git commit -m "feat: analyse des factures clients - projet CIE"
 git push origin main
+
+
+# ============================================================
+# ERREURS RENCONTRÉES ET SOLUTIONS
+# ============================================================
+
+# ------------------------------------------------------------
+# ERREUR 1 — .gitignore avec guillemets (règles ignorées)
+# ------------------------------------------------------------
+# Symptôme : venv/ et data/ sont trackés malgré le .gitignore
+#
+# Mauvais .gitignore :
+"venv/"
+"data/"
+"__pycache__/"
+#
+# Bon .gitignore :
+venv/
+data/
+__pycache__/
+*.zip
+*.pyc
+.ipynb_checkpoints/
+#
+# Solution :
+# Ouvrir .gitignore dans VS Code
+# Supprimer tous les guillemets
+# Sauvegarder avec Ctrl+S
+# Puis :
+git add .gitignore
+git commit -m "fix: corriger .gitignore - supprimer guillemets"
+
+
+# ------------------------------------------------------------
+# ERREUR 2 — Mauvais remote (git@github.com au lieu de git@github-kaynordata)
+# ------------------------------------------------------------
+# Symptôme :
+# ERROR: Permission to Kaynor-Data/projet.git denied to konatebeh20.
+# fatal: Could not read from remote repository.
+#
+# Cause : le remote utilise git@github.com (compte perso)
+# au lieu de git@github-kaynordata (alias SSH KaynorData)
+#
+# Vérifier :
+git remote -v
+# Si tu vois : git@github.com → mauvais
+# Si tu vois : git@github-kaynordata → bon
+#
+# Solution :
+git remote remove origin
+git remote add origin git@github-kaynordata:Kaynor-Data/projet-cie-factures.git
+git remote -v
+# Vérifier que le bon remote est configuré
+# Puis continuer avec :
+git push origin main
+
+
+# ------------------------------------------------------------
+# ERREUR 3 — Fichier data/ trop lourd (124 MB > limite 100 MB)
+# ------------------------------------------------------------
+# Symptôme :
+# remote: error: File data/household_power_consumption.txt is 124.82 MB
+# remote: error: GH001: Large files detected.
+# ! [remote rejected] main -> main (pre-receive hook declined)
+#
+# Cause : le fichier data/ a été commité avant d'être ignoré
+#
+# Solution étape par étape :
+
+# Étape 1 — Retirer data/ du suivi Git
+git rm -r --cached data/
+
+# Étape 2 — Vérifier que data/ est dans .gitignore (sans guillemets)
+
+# Étape 3 — Commiter la correction
+git add .
+git commit -m "fix: exclure data/ du repo - fichier trop lourd"
+
+# Étape 4 — Pousser
+git push origin main
+
+# SI ça ne suffit pas (fichier encore dans l'historique) :
+# Supprimer le fichier de TOUT l'historique Git :
+git filter-branch --force --index-filter "git rm --cached --ignore-unmatch data/household_power_consumption.txt" --prune-empty --tag-name-filter cat -- --all
+
+# Nettoyer l'historique :
+git reflog expire --expire=now --all
+git gc --prune=now --aggressive
+# Si on te demande y/n → taper n
+
+# Pousser en forçant :
+git push origin main --force
+
+
+# ------------------------------------------------------------
+# ERREUR 4 — venv/ tracké (trop de warnings LF/CRLF)
+# ------------------------------------------------------------
+# Symptôme :
+# warning: in the working copy of 'venv/Lib/site-packages/...'
+# LF will be replaced by CRLF... (des centaines de lignes)
+#
+# Cause : venv/ ajouté avant la création du .gitignore
+#
+# Solution :
+git rm -r --cached venv/
+git add .
+git commit -m "fix: supprimer venv du suivi Git"
+git push origin main
+
+
+# ------------------------------------------------------------
+# ERREUR 5 — remote origin already exists
+# ------------------------------------------------------------
+# Symptôme :
+# error: remote origin already exists.
+#
+# Solution :
+git remote remove origin
+git remote add origin git@github-kaynordata:Kaynor-Data/projet-cie-factures.git
+git push origin main
+
+
+# ------------------------------------------------------------
+# ERREUR 6 — nothing to commit, working tree clean
+# ------------------------------------------------------------
+# Symptôme :
+# On branch main
+# nothing to commit, working tree clean
+#
+# Ce n'est PAS une erreur — tout est déjà commité.
+# Continuer directement avec :
+git push origin main
+
+
+# ------------------------------------------------------------
+# ERREUR 7 — branch main vs master
+# ------------------------------------------------------------
+# Symptôme :
+# error: src refspec main does not match any
+#
+# Solution :
+git branch -M main
+git push origin main
+
+
+# ------------------------------------------------------------
+# ERREUR 8 — rejected, non-fast-forward
+# ------------------------------------------------------------
+# Symptôme :
+# ! [rejected] main -> main (non-fast-forward)
+#
+# Cause : le repo GitHub a des commits que tu n'as pas en local
+#
+# Solution :
+git pull origin main --allow-unrelated-histories
+git push origin main
+
+
+# ============================================================
+# VÉRIFICATIONS AVANT CHAQUE PUSH
+# ============================================================
+
+# 1. Vérifier le remote SSH (le plus important)
+git remote -v
+# Doit afficher : git@github-kaynordata:Kaynor-Data/...
+
+# 2. Vérifier que data/ et venv/ ne sont pas trackés
+git status
+# data/ et venv/ ne doivent PAS apparaître
+
+# 3. Vérifier le compte configuré
+git config --global user.name
+git config --global user.email
+
+
+# ============================================================
+# MESSAGES DE COMMIT — BONNES PRATIQUES
+# ============================================================
+
+feat:   → Nouveau code / nouvelle analyse
+fix:    → Correction d'erreur
+add:    → Ajout de fichier (graphique, README, etc.)
+update: → Mise à jour
+clean:  → Nettoyage
+
+# Exemples :
+git commit -m "feat: analyse des factures clients - projet CIE"
+git commit -m "fix: corriger remote SSH et exclure data/"
+git commit -m "add: visualisations factures mensuelles"
+git commit -m "update: README avec conclusions finales"
+
+
+# ============================================================
+# STRUCTURE TYPE DU PROJET
+# ============================================================
+
+projet-cie-factures/
+├── .gitignore              ← TOUJOURS EN PREMIER (sans guillemets)
+├── README.md               ← Description du projet
+├── requirements.txt        ← pip freeze > requirements.txt
+├── instructions.txt        ← Ce fichier
+├── data/                   ← Dataset (ignoré par Git)
+│   └── household_power_consumption.txt
+├── outputs/                ← Graphiques et résultats
+│   ├── factures_mensuelles.png
+│   └── interpretation.txt
+└── analyse_factures_cie.ipynb  ← Notebook principal
+
+
+# ============================================================
+# RAPPEL SSH — CONFIGURATION MULTI-COMPTES
+# ============================================================
+
+# Fichier : C:/Users/konat/.ssh/config
+# Contenu :
+
+Host github-kaynordata
+    HostName github.com
+    User git
+    IdentityFile C:/Users/konat/.ssh/id_ed25519_kaynordata
+
+Host github-perso
+    HostName github.com
+    User git
+    IdentityFile C:/Users/konat/.ssh/id_rsa
+
+# Tester la connexion KaynorData :
+ssh -T git@github-kaynordata
+# Réponse attendue : Hi Kaynor-Data! You've successfully authenticated...
+
+# Toujours utiliser git@github-kaynordata (PAS git@github.com)
+# pour les projets KaynorData
+
+
+# ============================================================
+# Document créé par KAYNOR DATA — Beh Konaté
+# Mis à jour après chaque projet
+# ============================================================
