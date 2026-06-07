@@ -1,0 +1,67 @@
+📈 Graphique 1 — Évolution des factures dans le temps
+
+Ce que tu vois :
+
+- La courbe monte et descend régulièrement — un pattern cyclique
+- Des pics en hiver (Jan, Déc) autour de 115 000 - 120 000 FCFA
+- Des creux en été (Jul, Aoû) autour de 45 000 - 55 000 FCFA
+- 2008-08 visible — le point le plus bas à ~20 000 FCFA
+
+
+Interprétation :
+
+La facture suit un cycle saisonnier régulier sur 4 ans. C'est un signal stable et prévisible — ce qui est une bonne nouvelle pour la CIE car elle peut anticiper les revenus mois par mois.
+
+
+_________________________________________________________________________________________________________________________________________________________
+
+📊 Graphique 2 — Facture totale par mois de l'année
+
+Ce que tu vois :
+
+- Janvier domine largement (~420 000 FCFA cumulés sur 4 ans)
+- Juillet et Août sont les plus bas (~160 000 - 210 000 FCFA)
+- Décembre est le 2ème mois le plus élevé (~380 000 FCFA)
+
+
+Interprétation :
+
+En cumulant les 4 années, janvier génère 2.5x plus de revenus qu'août. Pour la CIE, janvier est le mois le plus rentable — et aussi le plus critique pour le réseau.
+
+
+_________________________________________________________________________________________________________________________________________________________
+
+
+📉 Graphique 3 — Distribution des factures
+
+Ce que tu vois :
+
+- La majorité des mois ont une facture entre 70 000 et 90 000 FCFA
+- Moyenne (rouge) ≈ Médiane (verte) — elles sont très proches
+- 1 point isolé à gauche (~20 000 FCFA) → c'est notre 2008-08
+
+
+Interprétation :
+
+Contrairement au Projet 1, ici la distribution est presque symétrique — la moyenne et la médiane sont proches. Les factures mensuelles sont stables et prévisibles. Le seul outlier est 2008-08.
+
+_________________________________________________________________________________________________________________________________________________________
+
+
+📦 Graphique 4 — Boxplot
+
+Ce que tu vois :
+
+- La boîte entre ~65 000 et 95 000 FCFA → zone normale
+- La médiane (rouge) à ~80 000 FCFA
+- Moustache haute à ~120 000 FCFA
+- Point isolé en bas → 2008-08 confirmé comme outlier
+
+Interprétation :
+
+50% des factures mensuelles se situent entre 65 000 et 95 000 FCFA. C'est la zone de référence pour un abonné normal. Tout ce qui dépasse 120 000 FCFA ou descend sous 35 000 FCFA mérite une investigation.
+
+_________________________________________________________________________________________________________________________________________________________
+
+
+L'analyse des factures révèle un pattern saisonnier clair et stable sur 4 ans. La facture mensuelle médiane est de 80 000 FCFA avec une distribution symétrique — ce qui facilite la prévision des revenus. Un seul outlier significatif a été détecté en août 2008, probablement lié à une absence prolongée des occupants. Ces informations permettent à la CIE d'anticiper ses revenus et d'identifier les abonnés dont la consommation sort de la normale.

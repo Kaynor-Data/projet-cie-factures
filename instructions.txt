@@ -1,0 +1,31 @@
+# INSTRUCTIONS — PROJET CIE FACTURES
+# À suivre depuis le début pour reproduire ce projet
+
+## ÉTAPE 1 — Cloner le projet depuis GitHub
+git clone git@github-kaynordata:Kaynor-Data/projet-cie-factures.git
+cd projet-cie-factures
+
+## ÉTAPE 2 — Créer l'environnement virtuel
+python -m venv venv
+
+## ÉTAPE 3 — Activer l'environnement
+# Windows :
+venv\Scripts\activate
+
+## ÉTAPE 4 — Installer les bibliothèques
+pip install pandas matplotlib seaborn jupyter
+
+## ÉTAPE 5 — Générer requirements.txt
+pip freeze > requirements.txt
+
+## ÉTAPE 6 — Placer le dataset
+# Copier household_power_consumption.txt dans le dossier data/
+
+## ÉTAPE 7 — Lancer Jupyter
+jupyter notebook
+# Ouvrir le notebook : analyse_factures_cie.ipynb
+
+## ÉTAPE 8 — Pousser sur GitHub (voir instructions_git pour les erreurs)
+git add .
+git commit -m "feat: description"
+git push origin main
